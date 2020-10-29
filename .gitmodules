@@ -1,0 +1,3 @@
+[submodule "socket_chat_server"]
+	path = socket_chat_server
+	url = https://github.com/Zfinix/socket_chat_server
