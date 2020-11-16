@@ -2,18 +2,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_maps/flutter_google_maps.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:socket_chat/core/raw/raw.dart';
 import 'package:socket_chat/utils/log.dart';
 
 import 'config/config_loader.dart';
+import 'config/env_config.dart';
 import 'views/home.dart';
 import 'utils/theme.dart';
 
-void main() {
-  ConfigLoader.initialize();
+void mainCommon(EnvConfig envConfig) async {
   Log.init(kReleaseMode);
   GoogleMap.init(ConfigLoader.gApiKey);
-  WidgetsFlutterBinding.ensureInitialized();
   runApp(ProviderScope(child: MyApp()));
 }
 

@@ -83,7 +83,7 @@ class MapViewModel extends ChangeNotifier {
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission != LocationPermission.denied ||
           permission != LocationPermission.deniedForever) {
-        connectToServer();
+       // connectToServer();
       } else {
         await Geolocator.requestPermission();
         getLocation();
@@ -110,26 +110,22 @@ class MapViewModel extends ChangeNotifier {
 
   void connectToServer() {
     try {
-      socket = io('https://secret-sea-85567.herokuapp.com/', <String, dynamic>{
+      socket = io('http://127.0.0.1:3000', <String, dynamic>{
         'transports': ['websocket'],
         'autoConnect': false,
       });
       socket.connect();
+      socket.on('connect', (_) => print('connect: ${socket.id}'));
+      socket.on('location', handleLocationListen);
+      socket.on('typing', handleTyping);
+      socket.on('message', handleMessage);
+      socket.on('disconnect', (_) => print('disconnect'));
+      socket.on('fromServer', (_) => print(_));
 
       gotoMe();
     } catch (e) {
       print(e.toString());
     }
-
-    socket.on('connect', (_) {
-      print('connect: ${socket.id}');
-    });
-
-    socket.on('location', handleLocationListen);
-    socket.on('typing', handleTyping);
-    socket.on('message', handleMessage);
-    socket.on('disconnect', (_) => print('disconnect'));
-    socket.on('fromServer', (_) => print(_));
   }
 
   getPlace(GeoCoord coord) async {

@@ -1,0 +1,17 @@
+{
+   "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run: Flutter Dev environment",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main_dev.dart"
+          },
+          {
+            "name": "Run:Flutter Prod environment",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main_prod.dart"
+          }
+    ]
+}
