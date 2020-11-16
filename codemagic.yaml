@@ -34,7 +34,7 @@ workflows:
 
         # Write out the environment variable as a json file
         echo $APP_CONFIG | base64 --decode > $FCI_BUILD_DIR/config/app_config.json
-      - cd . && flutter build apk --debug
+      - cd . && flutter build apk --debug -t lib/main_dev.dart
       - find . -name "Podfile" -execdir pod install \;
       - cd . && flutter build ios --debug --no-codesign
     artifacts:
