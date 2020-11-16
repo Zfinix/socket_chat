@@ -1,0 +1,50 @@
+# Automatically generated on 2020-11-16 UTC from https://codemagic.io/app/5fb2a25c605096f91720b983/settings
+# Note that this configuration is not an exact match to UI settings. Review and adjust as necessary.
+
+workflows:
+  default-workflow:
+    name: Default Workflow
+    max_build_duration: 60
+    environment:
+      vars:
+        APP_CONFIG: ewogICJnQXBpS2V5IjogIkFJemFTeUEzbl95bTlWUUU2NURyRUVpdDZobnNtWDgyR3FGb3Q0QSIKfQo=
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - |
+        # set up debug keystore
+        rm -f ~/.android/debug.keystore
+        keytool -genkeypair \
+          -alias androiddebugkey \
+          -keypass android \
+          -keystore ~/.android/debug.keystore \
+          -storepass android \
+          -dname 'CN=Android Debug,O=Android,C=US' \
+          -keyalg 'RSA' \
+          -keysize 2048 \
+          -validity 10000
+      - |
+        # set up local properties
+        echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
+      - cd . && flutter packages pub get
+      - |
+        # Create directory if it doesn't exist
+        mkdir -p $FCI_BUILD_DIR/config
+
+        # Write out the environment variable as a json file
+        echo $APP_CONFIG | base64 --decode > $FCI_BUILD_DIR/config/app_config.json
+      - cd . && flutter build apk --debug
+      - find . -name "Podfile" -execdir pod install \;
+      - cd . && flutter build ios --debug --no-codesign
+    artifacts:
+      - build/**/outputs/**/*.apk
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/mapping.txt
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - ogbondachiziaruhoma@gmail.com
